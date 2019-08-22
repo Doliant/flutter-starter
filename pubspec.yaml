@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   fish_redux: ^0.2.5
+  flutter_redux: ^0.5.3
   flutter_flipperkit: ^0.0.19
 
 dev_dependencies:

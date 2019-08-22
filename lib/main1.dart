@@ -1,34 +1,106 @@
-import 'package:flutter/material.dart' hide Action;
-import 'package:fish_redux/fish_redux.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
-import 'pages/test/page.dart';
+// One simple action: Increment
+enum Actions { Increment }
 
+// The reducer, which takes the previous count and increments it in response
+// to an Increment action.
+int counterReducer(int state, dynamic action) {
+  if (action == Actions.Increment) {
+    return state + 1;
+  }
 
-void main() => runApp(createApp());
+  return state;
+}
 
-/// 创建应用的根 Widget
-/// 1. 创建一个简单的路由，并注册页面
-/// 2. 对所需的页面进行和 AppStore 的连接
-/// 3. 对所需的页面进行 AOP 的增强
-Widget createApp() {
-  final AbstractRoutes routes = PageRoutes(
-    pages: <String, Page<Object, dynamic>>{
-      /// 注册TodoList主页面
-      'todo_list': TestPage(),
-    },
-  );
+void main() {
+  // Create your store as a final variable in a base Widget. This works better
+  // with Hot Reload than creating it directly in the `build` function.
+  final store = new Store<int>(counterReducer, initialState: 0);
 
-  return MaterialApp(
-    title: 'Fluro',
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-    ),
-    home: routes.buildPage('todo_list', null),
-    onGenerateRoute: (RouteSettings settings) {
-      return MaterialPageRoute<Object>(builder: (BuildContext context) {
-        return routes.buildPage(settings.name, settings.arguments);
-      });
-    },
-  );
+  runApp(new FlutterReduxApp(
+    title: 'Flutter Redux',
+    store: store,
+  ));
+}
+
+class FlutterReduxApp extends StatelessWidget {
+  final Store<int> store;
+  final String title;
+
+  FlutterReduxApp({Key key, this.store, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // The StoreProvider should wrap your MaterialApp or WidgetsApp. This will
+    // ensure all routes have access to the store.
+    return new StoreProvider<int>(
+      // Pass the store to the StoreProvider. Any ancestor `StoreConnector`
+      // Widgets will find and use this value as the `Store`.
+      store: store,
+      child: new MaterialApp(
+        theme: new ThemeData.dark(),
+        title: title,
+        home: new Scaffold(
+          appBar: new AppBar(
+            title: new Text(title),
+          ),
+          body: new Center(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new Text(
+                  'You have pushed the button this many times:',
+                ),
+                // Connect the Store to a Text Widget that renders the current
+                // count.
+                //
+                // We'll wrap the Text Widget in a `StoreConnector` Widget. The
+                // `StoreConnector` will find the `Store` from the nearest
+                // `StoreProvider` ancestor, convert it into a String of the
+                // latest count, and pass that String  to the `builder` function
+                // as the `count`.
+                //
+                // Every time the button is tapped, an action is dispatched and
+                // run through the reducer. After the reducer updates the state,
+                // the Widget will be automatically rebuilt with the latest
+                // count. No need to manually manage subscriptions or Streams!
+                new StoreConnector<int, String>(
+                  converter: (store) => store.state.toString(),
+                  builder: (context, count) {
+                    return new Text(
+                      count,
+                      style: Theme.of(context).textTheme.display1,
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          // Connect the Store to a FloatingActionButton. In this case, we'll
+          // use the Store to build a callback that with dispatch an Increment
+          // Action.
+          //
+          // Then, we'll pass this callback to the button's `onPressed` handler.
+          floatingActionButton: new StoreConnector<int, VoidCallback>(
+            converter: (store) {
+              // Return a `VoidCallback`, which is a fancy name for a function
+              // with no parameters. It only dispatches an Increment action.
+              return () => store.dispatch(Actions.Increment);
+            },
+            builder: (context, callback) {
+              return new FloatingActionButton(
+                // Attach the `callback` to the `onPressed` attribute
+                onPressed: callback,
+                tooltip: 'Increment',
+                child: new Icon(Icons.add),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }

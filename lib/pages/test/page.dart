@@ -21,17 +21,11 @@ class TestPage extends Page<TestState, Map<String, dynamic>> {
         );
 }
 
-Middleware<T> httpMiddleware<T>() {
-  return ({Dispatch dispatch, Get<T> getState}) {
-    return (Dispatch next) {
-      return (Action action) {
-        final TestState state = getState() as TestState;
-        print('27 ${state.testNum}');
-        next(action);
-      };
-    };
-  };
-}
+Middleware<T> httpMiddleware<T>() => ({Dispatch dispatch, Get<T> getState}) => (Dispatch next) => (Action action) {
+  final TestState state = getState() as TestState;
+  print('27 ${action.type} ${state.testNum}');
+  next(action);
+};
 
 Middleware<T> logMiddleware<T>({
   String tag = 'redux',

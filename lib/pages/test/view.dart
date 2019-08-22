@@ -27,8 +27,8 @@ Widget _renderBody(TestState state) {
     decoration: BoxDecoration(color: Colors.white),
     child: Center(
       child: Text(
-        '${state.testNum}...',
-//        '...',
+//        '${state.testNum}...',
+        '...',
         textDirection: TextDirection.ltr,
         style: TextStyle(
           fontSize: 32,

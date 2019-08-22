@@ -5,6 +5,7 @@ import 'package:flutter_flipperkit/flutter_flipperkit.dart';
 import 'package:fish_redux/fish_redux.dart';
 
 import 'pages/test/page.dart';
+import 'pages/test2/page.dart';
 
 void main() {
   FlipperClient flipperClient = FlipperClient.getDefault();
@@ -32,6 +33,7 @@ Widget createApp() {
   final AbstractRoutes routes = PageRoutes(
     pages: <String, Page<Object, dynamic>>{
       'test': TestPage(),
+      'test2': Test2Page(),
     },
   );
 
