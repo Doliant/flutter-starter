@@ -1,22 +1,25 @@
-import 'state.dart';
 import '../../store/state.dart';
 import '../../store/action.dart';
+import '../../store/reducer.dart';
 
-State homeReducer(State appState, dynamic action) {
-  State newAppState = appState.clone();
-  HomeState state = newAppState.home;
-  bool isChange = true;
+import 'state.dart';
+import 'action.dart';
 
-  switch(action) {
-    case 'testAction':
-      state.testNum++;
-      break;
-    default:
-      isChange = false;
-      break;
+class HomeReducer extends Reducer {
+  @override
+  bool handle(State appState, Action action) {
+    HomeState state = appState.home;
+
+    if (action is HomeActionTest) {
+      HomeState data = action.data;
+      state.testNum += data.testNum;
+    }
+    else {
+      return false;
+    }
+
+    return true;
   }
 
-  if (isChange) return newAppState;
-  return appState;
 }
 

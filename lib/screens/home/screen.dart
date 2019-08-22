@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens.dart';
 import '../../store/store.dart';
 import 'state.dart';
+import 'action.dart';
 
 class ScreenHome extends StatefulWidget {
   Map<String, dynamic> arguments;
@@ -35,7 +36,9 @@ class _ScreenHome extends State<ScreenHome> {
       floatingActionButton: FloatingActionButton(
         // todo
         onPressed: () {
-          store.dispatch('testAction');
+          store.dispatch(HomeActionTestHttp(1));
+//          store.dispatch(HomeActionTest(2));
+
 //          Navigator.pop(context);
 //          Navigator.pushNamed(
 //            context,

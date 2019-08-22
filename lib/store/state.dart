@@ -7,7 +7,6 @@ class State {
     return State()
       ..home = home
 
-
     ;
   }
 }

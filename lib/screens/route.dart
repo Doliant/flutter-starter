@@ -14,9 +14,7 @@ abstract class AbstractRoute<T> {
   Route get route => _route;
   T get screen => _screen;
 
-  @protected
   T getScreen(RouteSettings settings);
 
-  @protected
   Route getRoute(T screen);
 }
