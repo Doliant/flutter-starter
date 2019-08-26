@@ -1,4 +1,5 @@
-import '../../store/action.dart';
+import '../../store/actions/action.dart';
+import '../../store/actions/http.dart';
 
 import 'state.dart';
 
@@ -11,7 +12,7 @@ class HomeActionTest extends Action {
 class HomeActionTestHttp extends HttpAction {
   HomeActionTestHttp(int num) {
     data = num;
-    url = 'http://127.0.0.1:3021/user/get_user_info';
+    url = '/user/get_user_info';
     method = HttpMethod.GET;
   }
 }

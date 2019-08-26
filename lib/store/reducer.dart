@@ -1,5 +1,5 @@
 import 'state.dart';
-import 'action.dart';
+import 'actions/action.dart';
 
 abstract class Reducer {
   State reducer(State appState, dynamic action) {

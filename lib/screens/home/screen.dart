@@ -37,6 +37,7 @@ class _ScreenHome extends State<ScreenHome> {
         // todo
         onPressed: () {
           store.dispatch(HomeActionTestHttp(1));
+          store.dispatch(HomeActionTestHttp(2));
 //          store.dispatch(HomeActionTest(2));
 
 //          Navigator.pop(context);

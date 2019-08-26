@@ -1,11 +1,16 @@
 import 'package:redux/redux.dart';
 
 import 'state.dart';
-import 'reducers.dart';
 import 'middlewares/http.dart';
 
+import '../screens/home/reducer.dart';
+
 Store<State> store = Store<State>(
-  reducers,
+  combineReducers([
+    HomeReducer().reducer,
+
+
+  ]),
   initialState: State(),
   middleware: [httpMiddleware],
 );
