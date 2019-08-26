@@ -2,10 +2,10 @@ import 'action.dart';
 
 // http请求method
 enum HttpMethod {
-  POST,
-  GET,
-  PUT,
-  DELETE,
+  post,
+  get,
+  put,
+  delete,
 }
 
 // http请求状态
@@ -20,12 +20,14 @@ enum HttpStatus {
 
 // http请求Action
 class HttpAction extends Action {
+  // 是否单一 (比对data + url + method + args; 后于isSingle)
+  bool isHttpSingle = false;
   // 请求状态
   HttpStatus status;
   // URL
   String url;
   // method
-  HttpMethod method = HttpMethod.POST;
+  HttpMethod method = HttpMethod.post;
   // 参数数据
   dynamic args;
   // 请求结果数据
@@ -38,17 +40,17 @@ class HttpAction extends Action {
    * 开始请求回调
    * [HttpAction action]
    */
-  Function onRequesting;
+  ActionCallback<HttpAction> onRequesting;
   /**
    * 请求成功回调
    * [HttpAction action]
    */
-  Function onSuccess;
+  ActionCallback<HttpAction> onSuccess;
   /**
    * 请求失败回调
    * [HttpAction action]
    */
-  Function onFail;
+  ActionCallback<HttpAction> onFail;
 
   HttpAction({
     dynamic data,

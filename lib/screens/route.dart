@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
 
-abstract class AbstractRoute<T> {
-  RouteSettings _settings;
-  Route _route;
+abstract class Route<T> {
+  flutter.RouteSettings _settings;
+  flutter.Route _route;
   T _screen;
 
-  AbstractRoute(this._settings) {
+  Route(this._settings) {
     _screen = getScreen(_settings);
     _route = getRoute(_screen);
   }
 
-  RouteSettings get settings => _settings;
-  Route get route => _route;
+  flutter.RouteSettings get settings => _settings;
+  flutter.Route get route => _route;
   T get screen => _screen;
 
-  T getScreen(RouteSettings settings);
+  T getScreen(flutter.RouteSettings settings);
 
-  Route getRoute(T screen);
+  flutter.Route getRoute(T screen);
 }

@@ -4,10 +4,10 @@ import '../../store/store.dart';
 import 'state.dart';
 import 'action.dart';
 
-class ScreenHome extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   Map<String, dynamic> arguments;
   HomeState state = store.state.home;
-  ScreenHome({Key key, Map<String, dynamic> this.arguments}) : super(key: key) {
+  HomeScreen({Key key, Map<String, dynamic> this.arguments}) : super(key: key) {
 
   }
 
@@ -15,7 +15,7 @@ class ScreenHome extends StatefulWidget {
   State<StatefulWidget> createState() => _ScreenHome();
 }
 
-class _ScreenHome extends State<ScreenHome> {
+class _ScreenHome extends State<HomeScreen> {
   int num = 0;
 
   @override
@@ -38,6 +38,7 @@ class _ScreenHome extends State<ScreenHome> {
         onPressed: () {
           store.dispatch(HomeActionTestHttp(1));
           store.dispatch(HomeActionTestHttp(2));
+          store.dispatch(HomeActionTestHttp2(3));
 //          store.dispatch(HomeActionTest(2));
 
 //          Navigator.pop(context);

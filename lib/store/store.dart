@@ -12,5 +12,5 @@ Store<State> store = Store<State>(
 
   ]),
   initialState: State(),
-  middleware: [httpMiddleware],
+  middleware: [HttpMiddleware().httpMiddleware],
 );

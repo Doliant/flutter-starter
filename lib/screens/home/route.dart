@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'screen.dart';
 
-import '../route.dart';
+import '../route.dart' as appRoute;
 
-class HomeRoute extends AbstractRoute<ScreenHome> {
+class HomeRoute extends appRoute.Route<HomeScreen> {
   HomeRoute(RouteSettings settings) : super(settings);
 
   @override
-  ScreenHome getScreen(RouteSettings settings) {
-    ScreenHome screen = ScreenHome(arguments: settings.arguments);
+  HomeScreen getScreen(RouteSettings settings) {
+    HomeScreen screen = HomeScreen(arguments: settings.arguments);
     // todo...
 
     return screen;
   }
 
   @override
-  Route getRoute(ScreenHome screen) {
+  Route getRoute(HomeScreen screen) {
     Route route = MaterialPageRoute(
       builder: (BuildContext context) => screen,
     );

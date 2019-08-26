@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'screen.dart';
 
-import '../route.dart';
+import '../route.dart' as appRoute;
 
-class IndexRoute extends AbstractRoute<ScreenIndex> {
+class IndexRoute extends appRoute.Route<ScreenIndex> {
   IndexRoute(RouteSettings settings) : super(settings);
 
   @override
