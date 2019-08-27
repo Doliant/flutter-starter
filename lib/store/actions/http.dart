@@ -20,13 +20,13 @@ enum HttpStatus {
 
 // http请求Action
 class HttpAction extends Action {
-  // 是否单一 (比对data + url + method + args; 后于isSingle)
+  // 是否单一 (比对data + url + method + args; 后于isSingle) TODO
   bool isHttpSingle = false;
   // 是否持锁
   bool isLock = false;
-  // 是否缓存
+  // 是否缓存 TODO
   bool isCache = false;
-  // 是否离线操作
+  // 是否离线操作 TODO
   bool isOffline = false;
   // 请求状态
   HttpStatus status;

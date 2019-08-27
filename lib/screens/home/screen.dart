@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import '../screens.dart';
 import '../../store/store.dart';
 import 'state.dart';
@@ -26,7 +27,6 @@ class _ScreenHome extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // todo
@@ -36,10 +36,10 @@ class _ScreenHome extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         // todo
         onPressed: () {
-          store.dispatch(HomeActionTestHttp(1));
-          store.dispatch(HomeActionTestHttp(2));
-          store.dispatch(HomeActionTestHttp2('15908151525'));
-//          store.dispatch(HomeActionTest(2));
+//          store.dispatch(HomeActionTestHttp(1));
+//          store.dispatch(HomeActionTestHttp(2));
+//          store.dispatch(HomeActionTestHttp2('15908151525'));
+          store.dispatch(HomeActionTest(2));
 
 //          Navigator.pop(context);
 //          Navigator.pushNamed(
@@ -49,9 +49,9 @@ class _ScreenHome extends State<HomeScreen> {
 //              'y': 'x',
 //            },
 //          );
-          setState(() {
-            num++;
-          });
+//          setState(() {
+//            num++;
+//          });
         },
         tooltip: 'Increment',
         backgroundColor: Colors.black,
@@ -61,6 +61,7 @@ class _ScreenHome extends State<HomeScreen> {
   }
 
   Widget renderBody(BuildContext context) {
+//    print(StoreProvider.of(context));
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Center(
