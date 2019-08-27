@@ -38,7 +38,7 @@ class _ScreenHome extends State<HomeScreen> {
         onPressed: () {
           store.dispatch(HomeActionTestHttp(1));
           store.dispatch(HomeActionTestHttp(2));
-          store.dispatch(HomeActionTestHttp2(3));
+          store.dispatch(HomeActionTestHttp2('15908151525'));
 //          store.dispatch(HomeActionTest(2));
 
 //          Navigator.pop(context);

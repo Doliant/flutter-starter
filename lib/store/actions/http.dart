@@ -22,6 +22,8 @@ enum HttpStatus {
 class HttpAction extends Action {
   // 是否单一 (比对data + url + method + args; 后于isSingle)
   bool isHttpSingle = false;
+  // 是否持锁
+  bool isLock = false;
   // 是否缓存
   bool isCache = false;
   // 是否离线操作

@@ -16,17 +16,20 @@ class HomeActionTestHttp extends HttpAction {
     url = '/user/get_user_info';
     method = HttpMethod.get;
     isSingle = true;
+    isLock = true;
     onSuccess = (HttpAction action) {
+      print(action);
+    };
+    onFail = (HttpAction action) {
       print(action);
     };
   }
 }
 
 class HomeActionTestHttp2 extends HttpAction {
-  HomeActionTestHttp2(int num) {
-    data = num;
-    url = '/user/get_user_info';
-    method = HttpMethod.get;
-    isSingle = true;
+  HomeActionTestHttp2(String mobile) {
+    data = {'mobile': mobile};
+    url = '/user/send_mobile_code';
+    method = HttpMethod.post;
   }
 }

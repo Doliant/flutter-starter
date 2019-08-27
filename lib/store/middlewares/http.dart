@@ -8,13 +8,27 @@ import '../state.dart';
 import '../actions/action.dart';
 import '../actions/http.dart';
 
-class AppDio extends Dio {
-  AppDio() {
-    // --- 默认配置 ---
-    options.contentType = ContentType.json;
-    options.responseType = ResponseType.json;
-    // 基地址(server) TODO: config
-    options.baseUrl = 'http://127.0.0.1:3021';
+class AppDio {
+  static Dio dio;
+  static Dio getDio() {
+    if (dio == null) {
+      dio = new Dio();
+
+      // 拦截器
+      dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (RequestOptions options) {
+          // 持锁
+          if (options.headers['isLock']) dio.lock();
+        },
+      ));
+
+      // --- 默认配置 ---
+      dio.options.contentType = ContentType.json;
+      dio.options.responseType = ResponseType.json;
+      // 基地址(server) TODO: config
+      dio.options.baseUrl = 'http://127.0.0.1:3021';
+    }
+    return dio;
   }
 }
 
@@ -24,6 +38,9 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
   // response code: 无用户权限 TODO: config
   static const int responseNoPermissionCode = 10011002;
 
+  /**
+   * 获取method
+   */
   String _getMethod(HttpMethod method) {
     switch(method) {
       case HttpMethod.get:
@@ -37,6 +54,9 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
     }
   }
 
+  /**
+   * 获取请求data
+   */
   Map<String, dynamic> _getData(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data;
@@ -47,9 +67,18 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
     return null;
   }
 
-  DioError _next(appMiddleware.MiddlewareNext<HttpAction> next, HttpAction action, HttpStatus status) {
+  /**
+   * next
+   */
+  void _next(appMiddleware.MiddlewareNext<HttpAction> next, HttpAction action, HttpStatus status) {
     ActionCallback<HttpAction> callback;
 
+    // 解锁
+    if (status != HttpStatus.requesting && action.isLock) {
+      AppDio.getDio().unlock();
+    }
+
+    // 回调
     switch(status) {
       case HttpStatus.requesting:
         callback = action.onRequesting;
@@ -62,9 +91,18 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
         break;
     }
 
+    // 当前状态
+    action.status = status;
+
+    // next
     if (!next(action, callback: callback)) {
       // 已被过滤
-      return DioError(type: DioErrorType.CANCEL);
+      throw DioError(type: DioErrorType.CANCEL);
+    }
+
+    // 完成
+    if (status != HttpStatus.requesting) {
+      finish(action);
     }
   }
 
@@ -75,42 +113,45 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
 
   @override
   void handle(Store<State> store, HttpAction action, appMiddleware.MiddlewareNext<HttpAction> next) async {
-    AppDio dio = AppDio();
+    Dio dio = AppDio.getDio();
     Map<String, dynamic> data = _getData(action.data);
 
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest:(RequestOptions options){
-        // TODO: 执行拦截器
-
-        // 开始请求
-        return _next(next, action, HttpStatus.requesting);
-      },
-    ));
-
     try {
+      // 开始请求
+      _next(next, action, HttpStatus.requesting);
+
       // 请求
-      Response<Map<String, dynamic>> response = await dio.request(
+      Response response = await dio.request(
         action.url,
-        options: Options(method: _getMethod(action.method)),
+        options: Options(method: _getMethod(action.method), headers: {'isLock': action.isLock}),
         data: action.method != HttpMethod.get ? data : null,
         queryParameters: action.method == HttpMethod.get ? data : null,
       );
 
+      // 请求结果
+      action.resultCode = response.data['code'];
+      action.resultMessage = response.data['message'];
+      action.result = response.data['data'];
+
       switch(response.data['code']) {
         // 成功
         case responseSuccessCode:
-
+          _next(next, action, HttpStatus.success);
           break;
         // 无用户权限
         case responseNoPermissionCode:
           // TODO: action
 
-          break;
+          continue fail;
+        fail:
         // 失败
         default:
-
+          _next(next, action, HttpStatus.fail);
       }
+
+      print(response);
     } on DioError catch (e) {
+      print(e);
       switch(e.type) {
         // 超时
         case DioErrorType.CONNECT_TIMEOUT:
@@ -120,33 +161,23 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
         timeout:
         case DioErrorType.RECEIVE_TIMEOUT:
           // TODO: action
-          break;
+
+          continue fail;
         // 关闭 (已被过滤?)
         case DioErrorType.CANCEL:
           // TODO: ...
           break;
         // 异常 TODO: 状态码
         case DioErrorType.RESPONSE:
-          continue response;
-        response:
+          continue fail;
+        fail:
         case DioErrorType.DEFAULT:
-
+          _next(next, action, HttpStatus.fail);
           break;
       }
     } catch (e) {
-      // 前端异常 TODO: ...
+      // 前端异常 TODO: log?...
       print(e);
     }
-
-
-//    print(isFinished(action));
-
-//    print(actions.length.toString());
-//    print(_getData(action.data).toString());
-
-//     action.status = HttpStatus.success;
-//     bool isNext = next(action, callback: action.onSuccess);
-//     print(isNext);
   }
-
 }
