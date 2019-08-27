@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:redux/redux.dart';
 
 import '../state.dart';
@@ -30,18 +27,14 @@ abstract class Middleware<T extends Action> {
     handle(store, action, _next(next));
   }
 
-  /**
-   * 单一过滤
-   */
+  /// 单一过滤
   void _filterSingle(T action) {
     if (action.isSingle) {
       this.actions.removeWhere((itemAction) => itemAction.runtimeType == action.runtimeType && itemAction.isSingle);
     };
   }
 
-  /**
-   * next
-   */
+  /// next
   MiddlewareNext<T> _next(NextDispatcher next) => (T action, {ActionCallback<T> callback}) {
     if (isFinished(action)) return false;
 
@@ -50,26 +43,18 @@ abstract class Middleware<T extends Action> {
     return true;
   };
 
-  /**
-   * 自定义单一过滤
-   */
+  /// 自定义单一过滤
   void filterSingle(T action) {}
 
-  /**
-   * 处理
-   */
+  /// 处理
   void handle(Store<State> store, T action, MiddlewareNext<T> next);
 
-  /**
-   * 完成
-   */
+  /// 完成
   void finish(T action) {
     this.actions.removeWhere((itemAction) => itemAction == action);
   }
 
-  /**
-   * 是否已完成
-   */
+  /// 是否已完成
   bool isFinished(T action) => actions.indexOf(action) == -1;
 }
 

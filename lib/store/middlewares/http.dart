@@ -38,9 +38,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
   // response code: 无用户权限 TODO: config
   static const int responseNoPermissionCode = 10011002;
 
-  /**
-   * 获取method
-   */
+  /// 获取method
   String _getMethod(HttpMethod method) {
     switch(method) {
       case HttpMethod.get:
@@ -54,9 +52,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
     }
   }
 
-  /**
-   * 获取请求data
-   */
+  /// 获取请求data
   Map<String, dynamic> _getData(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data;
@@ -67,9 +63,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
     return null;
   }
 
-  /**
-   * next
-   */
+  /// next
   void _next(appMiddleware.MiddlewareNext<HttpAction> next, HttpAction action, HttpStatus status) {
     ActionCallback<HttpAction> callback;
 

@@ -42,20 +42,14 @@ class HttpAction extends Action {
   int resultCode;
   // 请求结果信息
   String resultMessage;
-  /**
-   * 开始请求回调
-   * [HttpAction action]
-   */
+  /// 开始请求回调
+  /// [HttpAction action]
   ActionCallback<HttpAction> onRequesting;
-  /**
-   * 请求成功回调
-   * [HttpAction action]
-   */
+  /// 请求成功回调
+  /// [HttpAction action]
   ActionCallback<HttpAction> onSuccess;
-  /**
-   * 请求失败回调
-   * [HttpAction action]
-   */
+  /// 请求失败回调
+  /// [HttpAction action]
   ActionCallback<HttpAction> onFail;
 
   HttpAction({dynamic data, this.url, this.method}) : super(data: data);
