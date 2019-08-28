@@ -26,7 +26,6 @@ dependencies:
 
   dio: 2.1.13
 
-  fish_redux: ^0.2.5
   flutter_redux: ^0.5.3
   flutter_flipperkit: ^0.0.19
 
