@@ -9,7 +9,7 @@ class HomeRoute extends appRoute.Route<HomeScreen> {
   @override
   HomeScreen getScreen(RouteSettings settings) {
     HomeScreen screen = HomeScreen(arguments: settings.arguments);
-    // todo...
+    // TODO...
 
     return screen;
   }
@@ -19,7 +19,7 @@ class HomeRoute extends appRoute.Route<HomeScreen> {
     Route route = MaterialPageRoute(
       builder: (BuildContext context) => screen,
     );
-    // todo...
+    // TODO...
 
     return route;
   }

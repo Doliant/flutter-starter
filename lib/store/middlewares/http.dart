@@ -9,6 +9,7 @@ import '../actions/action.dart';
 import '../actions/http.dart';
 
 class AppDio {
+  // 单例
   static Dio dio;
   static Dio getDio() {
     if (dio == null) {

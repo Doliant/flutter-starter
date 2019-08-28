@@ -9,7 +9,7 @@ class IndexRoute extends appRoute.Route<ScreenIndex> {
   @override
   ScreenIndex getScreen(RouteSettings settings) {
     ScreenIndex screen = ScreenIndex(arguments: settings.arguments);
-    // todo...
+    // TODO...
 
     return screen;
   }
@@ -19,7 +19,7 @@ class IndexRoute extends appRoute.Route<ScreenIndex> {
     Route route = MaterialPageRoute(
       builder: (BuildContext context) => screen,
     );
-    // todo...
+    // TODO...
 
     return route;
   }

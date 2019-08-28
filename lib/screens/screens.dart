@@ -10,6 +10,8 @@ class Screens {
   static const String home = '/home';
 
   Route onGenerate(RouteSettings settings) {
+    // TODO: 拦截器..
+
     switch (settings.name) {
       // index
       case index: return IndexRoute(settings).route;
