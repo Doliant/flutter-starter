@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:redux/redux.dart';
+import 'package:redux/redux.dart' hide Middleware;
 
-import 'middleware.dart' as appMiddleware;
+import 'middleware.dart';
 import '../state.dart';
 import '../actions/action.dart';
 import '../actions/http.dart';
@@ -18,7 +18,7 @@ class AppDio {
       // 拦截器
       dio.interceptors.add(InterceptorsWrapper(
         onRequest: (RequestOptions options) {
-          // 持锁
+          // 上锁
           if (options.headers['isLock']) dio.lock();
         },
       ));
@@ -33,7 +33,7 @@ class AppDio {
   }
 }
 
-class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
+class HttpMiddleware extends Middleware<HttpAction> {
   // response code: 成功 TODO: config
   static const int responseSuccessCode = 0;
   // response code: 无用户权限 TODO: config
@@ -65,7 +65,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
   }
 
   /// next
-  void _next(appMiddleware.MiddlewareNext<HttpAction> next, HttpAction action, HttpStatus status) {
+  void _next(MiddlewareNext<HttpAction> next, HttpAction action, HttpStatus status) {
     ActionCallback<HttpAction> callback;
 
     // 解锁
@@ -95,6 +95,8 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
       throw DioError(type: DioErrorType.CANCEL);
     }
 
+    // TODO: 缓存
+
     // 完成
     if (status != HttpStatus.requesting) {
       finish(action);
@@ -107,7 +109,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
   }
 
   @override
-  void handle(Store<State> store, HttpAction action, appMiddleware.MiddlewareNext<HttpAction> next) async {
+  void handle(Store<State> store, HttpAction action, MiddlewareNext<HttpAction> next) async {
     Dio dio = AppDio.getDio();
     Map<String, dynamic> data = _getData(action.data);
 
@@ -135,7 +137,7 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
           break;
         // 无用户权限
         case responseNoPermissionCode:
-          // TODO: action
+          // TODO: action通知
 
           continue fail;
         fail:
@@ -155,7 +157,9 @@ class HttpMiddleware extends appMiddleware.Middleware<HttpAction> {
           continue timeout;
         timeout:
         case DioErrorType.RECEIVE_TIMEOUT:
-          // TODO: action
+          // TODO: action通知
+
+          // TODO: 离线操作
 
           continue fail;
         // 关闭 (已被过滤?)
